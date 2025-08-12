@@ -60,7 +60,7 @@ const BuyBPC = () => {
             <div className="space-y-4">
               <Button 
                 className="w-full bg-green-600 hover:bg-green-700 text-white rounded-2xl py-4"
-                onClick={() => window.open('https://wa.me/08022972593', '_blank')}
+                onClick={() => window.open('https://wa.me/2348022972593', '_blank')}
               >
                 Send Payment Proof via WhatsApp
               </Button>
