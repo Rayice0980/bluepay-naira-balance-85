@@ -222,13 +222,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) return;
     
     // Check if user has enough balance
-    if (balance < 7000) {
+    if (balance < 8000) {
       toast.error('Insufficient balance to purchase BPC code');
       return;
     }
     
     // Update balance
-    const newBalance = balance - 7000;
+    const newBalance = balance - 8000;
     setBalance(newBalance);
     localStorage.setItem(`bluepay_balance_${user.id}`, newBalance.toString());
     
@@ -250,7 +250,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Add transaction
     addTransaction({
       type: "bpc",
-      amount: 7000,
+      amount: 8000,
       status: "completed",
       description: "BPC Code Purchase"
     });

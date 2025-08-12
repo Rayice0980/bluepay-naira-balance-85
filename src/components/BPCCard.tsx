@@ -65,7 +65,7 @@ const BPCCard = () => {
             A BPC code is required for all withdrawals. Purchase below.
           </p>
           <p className="text-md font-medium mb-2">
-            Cost: <span className="font-bold">₦7,000</span>
+            Cost: <span className="font-bold">₦8,000</span>
           </p>
           <p className="text-md font-medium mb-2">
             Status: {user?.hasPurchasedBPC ? (
@@ -95,7 +95,7 @@ const BPCCard = () => {
               <DialogHeader>
                 <DialogTitle>Purchase BPC Code</DialogTitle>
                 <DialogDescription>
-                  Make a payment of ₦7,000 to the account below to activate your BPC code.
+                  Make a payment of ₦8,000 to the account below to activate your BPC code.
                 </DialogDescription>
               </DialogHeader>
               
@@ -106,7 +106,7 @@ const BPCCard = () => {
                     <div>
                       <h3 className="text-sm font-medium text-blue-800">Payment Instructions</h3>
                       <div className="mt-2 text-sm text-blue-700 space-y-1">
-                        <p>Please make a bank transfer of ₦7,000 to:</p>
+                        <p>Please make a bank transfer of ₦8,000 to:</p>
                       </div>
                     </div>
                   </div>
@@ -114,17 +114,17 @@ const BPCCard = () => {
                 
                 <div className="grid grid-cols-3 gap-4 items-center">
                   <div className="text-sm font-medium">Account Number:</div>
-                  <div className="col-span-2 font-mono bg-gray-100 p-2 rounded">9074421652</div>
+                  <div className="col-span-2 font-mono bg-gray-100 p-2 rounded">5770768256</div>
                 </div>
                 
                 <div className="grid grid-cols-3 gap-4 items-center">
                   <div className="text-sm font-medium">Bank Name:</div>
-                  <div className="col-span-2 bg-gray-100 p-2 rounded">Smartcash</div>
+                  <div className="col-span-2 bg-gray-100 p-2 rounded">MONIE POINT</div>
                 </div>
                 
                 <div className="grid grid-cols-3 gap-4 items-center">
                   <div className="text-sm font-medium">Account Name:</div>
-                  <div className="col-span-2 bg-gray-100 p-2 rounded">SAMUEL DESTINY ONI</div>
+                  <div className="col-span-2 bg-gray-100 p-2 rounded">ABDULAZEEZ JOLAADE YUSUF</div>
                 </div>
                 
                 <div className="rounded-md bg-amber-50 p-4 border border-amber-200 mt-2">
@@ -135,7 +135,7 @@ const BPCCard = () => {
                       <div className="mt-1 text-sm text-amber-700">
                         <p className="mb-2">After payment, please send a screenshot of your payment confirmation to our agent via WhatsApp before activating your BPC code.</p>
                         <a 
-                          href="https://wa.me/message/5W4RJF7XI4GQB1" 
+                          href="https://wa.me/08022972593" 
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="inline-flex items-center text-green-600 font-medium hover:text-green-700 transition-colors"

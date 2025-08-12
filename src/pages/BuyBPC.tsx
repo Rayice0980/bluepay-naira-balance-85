@@ -34,7 +34,7 @@ const BuyBPC = () => {
             </p>
             
             <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="font-semibold text-blue-900">Price: ₦7,000</p>
+              <p className="font-semibold text-blue-900">Price: ₦8,000</p>
               <p className="text-blue-700 text-sm mt-1">One-time purchase for unlimited withdrawals</p>
             </div>
 
@@ -43,16 +43,16 @@ const BuyBPC = () => {
               <h3 className="font-semibold text-gray-900">Payment Instructions:</h3>
               <div className="bg-gray-50 p-4 rounded-lg space-y-2">
                 <p className="text-sm text-gray-700">
-                  <strong>Bank:</strong> MoniePoint MFB
+                  <strong>Bank:</strong> MONIE POINT
                 </p>
                 <p className="text-sm text-gray-700">
-                  <strong>Account Number:</strong> 6111291862
+                  <strong>Account Number:</strong> 5770768256
                 </p>
                 <p className="text-sm text-gray-700">
-                  <strong>Account Name:</strong> SHARON TAIWO
+                  <strong>Account Name:</strong> ABDULAZEEZ JOLAADE YUSUF
                 </p>
                 <p className="text-sm text-gray-700">
-                  <strong>Amount:</strong> ₦7,000
+                  <strong>Amount:</strong> ₦8,000
                 </p>
               </div>
             </div>
@@ -60,7 +60,7 @@ const BuyBPC = () => {
             <div className="space-y-4">
               <Button 
                 className="w-full bg-green-600 hover:bg-green-700 text-white rounded-2xl py-4"
-                onClick={() => window.open('https://wa.me/2348143247192', '_blank')}
+                onClick={() => window.open('https://wa.me/08022972593', '_blank')}
               >
                 Send Payment Proof via WhatsApp
               </Button>
