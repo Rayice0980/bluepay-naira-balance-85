@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Banknote } from "lucide-react";
+import { ArrowLeft, Banknote, Send } from "lucide-react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
+import { supabase } from "@/integrations/supabase/client";
 
 const Withdraw = () => {
   const navigate = useNavigate();
@@ -19,6 +20,9 @@ const Withdraw = () => {
     amount: "",
     bpcCode: ""
   });
+  const [isAuthCodeSent, setIsAuthCodeSent] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isSendingCode, setIsSendingCode] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -27,7 +31,54 @@ const Withdraw = () => {
     }));
   };
 
-  const handleWithdraw = (e: React.FormEvent) => {
+  const sendAuthCode = async () => {
+    // Validate form fields first
+    if (!formData.accountName || !formData.accountNumber || !formData.bankName || !formData.amount) {
+      toast.error("Please fill in all bank details and amount first");
+      return;
+    }
+
+    const amount = parseFloat(formData.amount);
+    if (isNaN(amount) || amount <= 0) {
+      toast.error("Please enter a valid amount");
+      return;
+    }
+
+    if (amount > balance) {
+      toast.error("Insufficient balance");
+      return;
+    }
+
+    if (amount > 300000) {
+      toast.error("Maximum daily withdrawal is ₦300,000");
+      return;
+    }
+
+    setIsSendingCode(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('send-auth-code', {
+        body: {
+          amount: amount,
+          userEmail: user?.email || 'user@example.com'
+        }
+      });
+
+      if (error) throw error;
+
+      setIsAuthCodeSent(true);
+      toast.success("Authentication code sent to admin email", {
+        description: "Please check for the code and enter it below"
+      });
+    } catch (error) {
+      console.error('Error sending auth code:', error);
+      toast.error("Failed to send authentication code");
+    } finally {
+      setIsSendingCode(false);
+    }
+  };
+
+  const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Check if user has purchased BPC
@@ -48,9 +99,8 @@ const Withdraw = () => {
       return;
     }
 
-    // Validate BPC code
-    if (!formData.bpcCode.includes("BPCC")) {
-      toast.error("Invalid BPC Code. Code must contain 'BPCC'");
+    if (!isAuthCodeSent) {
+      toast.error("Please send authentication code first");
       return;
     }
 
@@ -70,13 +120,54 @@ const Withdraw = () => {
       return;
     }
 
-    // Process withdrawal using AuthContext
-    const { withdraw } = useAuth();
-    const success = withdraw(amount);
-    
-    if (success) {
-      // Navigate to success page
-      navigate("/withdrawal-success");
+    setIsVerifying(true);
+
+    try {
+      // Verify authentication code
+      const { data, error } = await supabase.functions.invoke('verify-auth-code', {
+        body: {
+          code: formData.bpcCode,
+          userEmail: user?.email || 'user@example.com',
+          amount: amount
+        }
+      });
+
+      if (error || !data?.success) {
+        toast.error("Invalid authentication code", {
+          description: "Please check the code and try again"
+        });
+        return;
+      }
+
+      // Process withdrawal using AuthContext
+      const { withdraw } = useAuth();
+      const success = withdraw(amount);
+      
+      if (success) {
+        toast.success(`Withdrawal Successful!`, {
+          description: `₦${amount.toLocaleString()} has been processed for withdrawal`
+        });
+        
+        // Reset form
+        setFormData({
+          accountName: "",
+          accountNumber: "",
+          bankName: "",
+          amount: "",
+          bpcCode: ""
+        });
+        setIsAuthCodeSent(false);
+        
+        // Navigate to success page after a short delay
+        setTimeout(() => {
+          navigate("/withdrawal-success");
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error verifying auth code:', error);
+      toast.error("Failed to verify authentication code");
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -165,17 +256,51 @@ const Withdraw = () => {
                 </p>
               </div>
 
+              {/* Send Authentication Code Button */}
+              <div className="space-y-3">
+                <Button
+                  type="button"
+                  onClick={sendAuthCode}
+                  disabled={isSendingCode || isAuthCodeSent}
+                  className={`w-full py-3 rounded-lg transition-colors ${
+                    isAuthCodeSent 
+                      ? 'bg-green-600 hover:bg-green-700' 
+                      : 'bg-orange-600 hover:bg-orange-700'
+                  } text-white`}
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  {isSendingCode 
+                    ? 'Sending Code...' 
+                    : isAuthCodeSent 
+                      ? 'Code Sent ✓' 
+                      : 'Send Authentication Code'
+                  }
+                </Button>
+                {isAuthCodeSent && (
+                  <p className="text-sm text-green-600 text-center">
+                    Authentication code sent to admin email
+                  </p>
+                )}
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="bpcCode" className="text-gray-700">BPC Code</Label>
+                <Label htmlFor="bpcCode" className="text-gray-700">
+                  Authentication Code
+                </Label>
                 <Input
                   id="bpcCode"
                   type="text"
-                  placeholder="Enter your BPC code"
+                  placeholder="Enter the 6-digit authentication code"
                   value={formData.bpcCode}
                   onChange={(e) => handleInputChange("bpcCode", e.target.value)}
                   className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  maxLength={6}
+                  disabled={!isAuthCodeSent}
                   required
                 />
+                <p className="text-sm text-gray-500">
+                  Enter the 6-digit code sent to the admin email
+                </p>
                 {!user?.hasPurchasedBPC && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                     <p className="text-sm text-red-600 mb-2">
@@ -195,9 +320,10 @@ const Withdraw = () => {
 
               <Button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg mt-6"
+                disabled={!isAuthCodeSent || isVerifying}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Submit Withdrawal Request
+                {isVerifying ? 'Verifying...' : 'Submit Withdrawal Request'}
               </Button>
             </form>
           </CardContent>
