@@ -5,7 +5,7 @@ import { MessageCircle, Phone, Mail, Clock } from "lucide-react";
 
 const ContactUs = () => {
   const handleWhatsAppContact = () => {
-    const phoneNumber = "2348022972593";
+    const phoneNumber = "2348022972493";
     const message = "Hello, I need support with BluePay";
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -33,7 +33,7 @@ const ContactUs = () => {
             </div>
 
             <div className="bg-blue-50 rounded-lg p-4">
-              <p className="text-bluepay-600 font-medium text-lg">+234 802 297 2593</p>
+              <p className="text-bluepay-600 font-medium text-lg">+234 802 297 2493</p>
             </div>
 
             <Button 
@@ -51,7 +51,7 @@ const ContactUs = () => {
           <Card className="bg-white border-blue-100 p-4 text-center">
             <Phone className="h-6 w-6 text-bluepay-500 mx-auto mb-2" />
             <h3 className="font-medium text-gray-900">Phone</h3>
-            <p className="text-sm text-gray-600">+234 802 297 2593</p>
+            <p className="text-sm text-gray-600">+234 802 297 2493</p>
           </Card>
 
           <Card className="bg-white border-blue-100 p-4 text-center">
